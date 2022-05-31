@@ -1,0 +1,53 @@
+version: "3.6"
+services:
+  mysql-standalone:
+    image: mysql:5.7
+    ports:
+     - 3306:3306
+    environment:
+     - MYSQL_DATABASE=VendorPortal
+     - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+     - dbdata:/var/lib/mysql
+     - ./vendorportal/vendorportal.sql:/docker-entrypoint-initdb.d/0_init.sql
+      
+  backend:
+    image: springboot-docker-container
+    ports:
+     - 8080:8080
+    build:
+     context: ./vendorportal
+     dockerfile: Dockerfile
+    environment:
+    
+     SPRING_DATASOURCE_URL: jdbc:mysql://mysql-standalone:3306/VendorPortal?autoReconnect=true&useSSL=false
+    depends_on:
+     - mysql-standalone 
+     
+  frontend:
+    build: 
+      context: ./vendorPortalFront
+      dockerfile: Dockerfile
+    image: vendorportalfront
+    ports:
+     - 8081:8081
+      
+  vendorportalfront:
+    build: 
+      context: ./vendorPortalFront
+      dockerfile: Dockerfile
+    image: nginx
+    depends_on:
+     - frontend
+    ports:
+     - 80:80
+     
+volumes:
+  dbdata:
+   
+     
+ 
+   
+   
+       
+       
