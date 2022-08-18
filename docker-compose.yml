@@ -10,8 +10,7 @@ services:
     command: --max_allowed_packet=32505856
     volumes:
      - dbdata:/var/lib/mysql
-     - ./VendorPortal/vendorportal.sql:/docker-entrypoint-initdb.d/0_init.sql
-      
+   
   backend:
     image: springboot-docker-container
     ports:
@@ -21,7 +20,7 @@ services:
      dockerfile: Dockerfile
     environment:
     
-     SPRING_DATASOURCE_URL: jdbc:mysql://mysql-standalone:3306/VendorPortal?autoReconnect=true&useSSL=false
+     SPRING_DATASOURCE_URL: jdbc:mysql://mysql-standalone:3306/VendorPortal?autoReconnect=true&createDatabaseIfNotExists=true&useSSL=false
     depends_on:
      - mysql-standalone 
      
